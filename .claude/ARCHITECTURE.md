@@ -26,6 +26,7 @@ src/app/
     components/
       ui/                      # átomos: button.ts, input.ts, card.ts (variantes vía input())
     models/
+    pipes/
     services/
   features/
     auth/
@@ -40,6 +41,7 @@ src/app/
       pages/
         login/
           login.ts
+      pipes/
       queries/
         auth-queries.ts         # queryOptions() para injectQuery/injectMutation, envuelve auth-api.ts
       services/
@@ -339,7 +341,19 @@ export class AuthLayout {}
 - Los tipos pequeños de uso local quedan inline en el servicio que los usa.
 - Se promueven a `shared/models/` solo al ser reusados por 2 o más features.
 
-## 7. Configuración de entorno
+## 7. Pipes
+
+- Carpeta `pipes/` por feature, para pipes de uso exclusivo de ese feature.
+- Se promueven a `shared/pipes/` solo al ser reusados por 2 o más features
+  (misma regla de promoción que §1/§6).
+- **Naming:** sin sufijo de tipo (`format-currency.ts`, no
+  `format-currency.pipe.ts`), consistente con la convención de §1
+  (excepción solo para `.routes.ts` y `.store.ts`).
+- Los pipes son standalone por default — no se declaran en ningún
+  `NgModule`, se importan directamente en el arreglo `imports` del
+  componente que los usa.
+
+## 8. Configuración de entorno
 
 - `src/environments/environment.ts`, `environment.qa.ts`,
   `environment.production.ts`, cableados vía `fileReplacements` por
@@ -349,13 +363,13 @@ export class AuthLayout {}
 - Los servicios API leen `environment.apiUrl`, nunca `process.env` ni
   variables globales ad-hoc.
 
-## 8. Testing
+## 9. Testing
 
 Mantener los defaults de Angular CLI: Karma + Jasmine, `*.spec.ts` colocado
 junto a cada archivo fuente (ya es el patrón de `app.spec.ts`). No se
 introduce ningún framework o convención nueva aquí.
 
-## 9. Reglas explícitas de la stack elegida
+## 10. Reglas explícitas de la stack elegida
 
 - **Sin axios en ningún lugar** — solo `HttpClient`, vía los servicios API
   respaldados por interceptors (§3). Se estandariza completamente en
