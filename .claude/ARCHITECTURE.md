@@ -22,6 +22,8 @@ src/app/
       auth-interceptor.ts
       error-interceptor.ts
       loading-interceptor.ts
+    store/
+      app.store.ts             # estado síncrono transversal sin feature dueño (tema, idioma, notificaciones globales)
   shared/                      # código cross-feature, reusado por 2+ features
     components/
       ui/                      # átomos: button.ts, input.ts, card.ts (variantes vía input())
@@ -127,6 +129,17 @@ por sí mismo, solo recibe el resultado y lo guarda como estado síncrono.
 
 Para slices de estado síncrono reutilizados entre varios stores, usar
 `signalStoreFeature(withState(...), withComputed(...), withMethods(...))`.
+
+**Un store realmente transversal (sin feature dueño) vive en
+`core/store/<name>.store.ts`**, no dentro de `features/`. Es la otra cara
+del caso `AuthStore`: `AuthStore` es `providedIn: 'root'` pero su dominio
+es el feature `auth`, así que su archivo vive en
+`features/auth/store/auth.store.ts` (ver §1). Cuando el estado síncrono no
+pertenece al dominio de ningún feature — ej. tema visual, idioma activo,
+un banner de notificaciones global — no hay feature al que asignarle el
+archivo, y por eso vive en `core/store/` en su lugar. Sigue siendo
+`providedIn: 'root'` igual que cualquier store cross-cutting (ver regla de
+arriba).
 
 ## 3. Capa HTTP
 
