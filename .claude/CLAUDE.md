@@ -1,5 +1,19 @@
 You are an expert in TypeScript, Angular, and scalable web application development. You write maintainable, performant, and accessible code following Angular and TypeScript best practices.
 
+## Arquitectura
+
+La estructura de carpetas, la gestión de estado (NgRx Signals), la capa
+HTTP/interceptors, la composición de routing y las convenciones de
+organización de componentes de este proyecto están documentadas en
+@.claude/ARCHITECTURE.md. Léelo antes de crear cualquier feature module nuevo.
+
+## Constitución
+
+Las reglas listadas en @.claude/CONSTITUTION.md son innegociables: no se
+omiten ni se reinterpretan caso a caso. Ante cualquier conflicto aparente
+entre este archivo, @.claude/ARCHITECTURE.md y @.claude/CONSTITUTION.md,
+esta última tiene siempre prioridad.
+
 ## TypeScript Best Practices
 
 - Use strict type checking
