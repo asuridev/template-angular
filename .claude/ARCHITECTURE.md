@@ -376,6 +376,11 @@ Mantener los defaults de Angular CLI: Karma + Jasmine, `*.spec.ts` colocado
 junto a cada archivo fuente (ya es el patrón de `app.spec.ts`). No se
 introduce ningún framework o convención nueva aquí.
 
+Playwright CLI (ver `TOOLS.md`) es una herramienta de verificación manual
+del agente durante el desarrollo (feedback visual, validación de flujos)
+— no introduce Playwright como framework de pruebas automatizadas del
+proyecto.
+
 ## 10. Reglas explícitas de la stack elegida
 
 - **Sin axios en ningún lugar** — solo `HttpClient`, vía los servicios API
@@ -392,3 +397,14 @@ introduce ningún framework o convención nueva aquí.
   store. El store solo orquesta estado síncrono (§2). Esa disciplina de
   capas (componente → TanStack Query / Store → servicio → `HttpClient`) es
   obligatoria en todo el proyecto.
+- **Tailwind CSS (v4) es la única librería de estilos** — wireado vía
+  `@import "tailwindcss"` en `src/styles.css` y el plugin
+  `@tailwindcss/postcss` en `.postcssrc.json`. No se introducen otros
+  frameworks/librerías CSS ni CSS plano fuera de utilidades Tailwind (salvo
+  el bloque `<style>` de host ya presente en componentes generados por el
+  CLI, ver §5).
+- **Proyecto zoneless** — `provideZonelessChangeDetection()` está activo en
+  `app.config.ts` desde el scaffold inicial. No se importa `zone.js`, no se
+  inyecta `NgZone`, y la UI se actualiza únicamente vía signals +
+  `ChangeDetectionStrategy.OnPush` (ver `CLAUDE.md` — Angular Best
+  Practices).

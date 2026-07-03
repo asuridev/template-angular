@@ -14,6 +14,12 @@ omiten ni se reinterpretan caso a caso. Ante cualquier conflicto aparente
 entre este archivo, @.claude/ARCHITECTURE.md y @.claude/CONSTITUTION.md,
 esta última tiene siempre prioridad.
 
+## Herramientas
+
+Las herramientas de CLI disponibles para el agente (Playwright CLI para
+feedback visual/validación de flujos, ctx7 para documentación de
+librerías) están documentadas en @.claude/TOOLS.md.
+
 ## TypeScript Best Practices
 
 - Use strict type checking
@@ -29,6 +35,10 @@ esta última tiene siempre prioridad.
 - Do NOT use the `@HostBinding` and `@HostListener` decorators. Put host bindings inside the `host` object of the `@Component` or `@Directive` decorator instead
 - Use `NgOptimizedImage` for all static images.
   - `NgOptimizedImage` does not work for inline base64 images.
+- This project uses zoneless change detection
+  (`provideZonelessChangeDetection()`) — never import `zone.js`, inject
+  `NgZone`, or write code that relies on automatic/implicit change
+  detection outside of signals and `OnPush`
 
 ## Components
 
@@ -60,6 +70,14 @@ esta última tiene siempre prioridad.
 - Keep templates simple and avoid complex logic
 - Use native control flow (`@if`, `@for`, `@switch`) instead of `*ngIf`, `*ngFor`, `*ngSwitch`
 - Use the async pipe to handle observables
+
+## Styling
+
+- This project uses Tailwind CSS (v4) as its only styling solution, wired
+  via `@tailwindcss/postcss` (see `src/styles.css`, `.postcssrc.json`)
+- Use Tailwind utility classes for all styling; do not introduce other CSS
+  frameworks or component libraries (Bootstrap, Material,
+  styled-components, etc.)
 
 ## Services
 
