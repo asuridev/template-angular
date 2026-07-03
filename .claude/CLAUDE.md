@@ -36,7 +36,14 @@ esta última tiene siempre prioridad.
 - Use `input()` and `output()` functions instead of decorators
 - Use `computed()` for derived state
 - Set `changeDetection: ChangeDetectionStrategy.OnPush` in `@Component` decorator
-- Prefer inline templates for small components
+- Prefer inline `template`/`styles` for small, simple components. Use separate
+  files (`templateUrl`/`styleUrl`) once the template/styles grow in
+  complexity, to improve separation of concerns
+- Naming: no `Component` suffix on the class (`UserProfile`, not
+  `UserProfileComponent`), matching the file's own no-type-suffix convention
+  (see `ARCHITECTURE.md` §1). The `.ts`, template, and style files share the
+  same base name; with multiple style files, append descriptive words (e.g.
+  `user-profile-settings.css`)
 - Prefer Reactive forms instead of Template-driven ones
 - Do NOT use `ngClass`, use `class` bindings instead
 - Do NOT use `ngStyle`, use `style` bindings instead

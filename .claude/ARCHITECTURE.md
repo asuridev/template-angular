@@ -19,9 +19,9 @@ files (`index.ts`) salvo que exista una necesidad concreta.
 src/app/
   core/                        # singletons de toda la app, registrados una vez en app.config.ts
     interceptors/
-      auth.interceptor.ts
-      error.interceptor.ts
-      loading.interceptor.ts
+      auth-interceptor.ts
+      error-interceptor.ts
+      loading-interceptor.ts
   shared/                      # código cross-feature, reusado por 2+ features
     components/
       ui/                      # átomos: button.ts, input.ts, card.ts (variantes vía input())
@@ -33,11 +33,11 @@ src/app/
       auth.routes.ts
       components/
       guards/
-        role.guard.ts
+        role-guard.ts
       layouts/
         auth-layout.ts         # shell del módulo, expone <router-outlet>, se carga vía loadComponent
       models/
-        session.model.ts
+        session-model.ts
       pages/
         login/
           login.ts
@@ -54,9 +54,15 @@ src/app/
 
 **Naming:** seguir el estilo Angular v20 — sin sufijo de "tipo" en los nombres
 de archivo (`auth-api.ts`, no `auth-api.service.ts`). Este proyecto ya sigue
-esta convención (`app.ts`, no `app.component.ts`). **Excepción:** mantener
-los sufijos `.routes.ts` y `.store.ts` — son convenciones ya establecidas del
-ecosistema Router / NgRx Signals, y ya usadas por `app.routes.ts`.
+esta convención (`app.ts`, no `app.component.ts`). Cuando el archivo sí
+necesita una palabra que indique su tipo (guards, interceptors, modelos), se
+usa guion — no punto — como separador (`role-guard.ts`, `auth-interceptor.ts`,
+`session-model.ts`): es el separador por defecto de los schematics
+`ng generate guard`/`ng generate interceptor` en Angular v20 (opción
+`type-separator`, default `-`; `.` solo si se pasa explícitamente). **Única
+excepción real:** mantener los sufijos con punto `.routes.ts` y `.store.ts`
+— son convenciones ya establecidas del ecosistema Router / NgRx Signals, y ya
+usadas por `app.routes.ts`.
 
 Un feature solo necesita `layouts/` si tiene una "cáscara" visual propia
 (nav, sidebar, contenedor). Si el feature es una sola página suelta, se omite
@@ -133,14 +139,14 @@ Para slices de estado síncrono reutilizados entre varios stores, usar
   todavía no se llama en ningún lugar de este proyecto — es wiring nuevo.
 
 ```typescript
-// core/interceptors/auth.interceptor.ts
+// core/interceptors/auth-interceptor.ts
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const token = inject(AuthStore).token();
   if (!token) return next(req);
   return next(req.clone({ setHeaders: { Authorization: `Bearer ${token}` } }));
 };
 
-// core/interceptors/error.interceptor.ts
+// core/interceptors/error-interceptor.ts
 export const errorInterceptor: HttpInterceptorFn = (req, next) =>
   next(req).pipe(
     catchError((err: HttpErrorResponse) => {
@@ -149,7 +155,7 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) =>
     })
   );
 
-// core/interceptors/loading.interceptor.ts
+// core/interceptors/loading-interceptor.ts
 export const loadingInterceptor: HttpInterceptorFn = (req, next) => {
   const loading = inject(LoadingIndicatorService);
   loading.show();
@@ -168,13 +174,13 @@ providers: [
 ```
 
 **Función de cada interceptor** (resumen):
-- `auth.interceptor.ts` — adjunta el token de autenticación a cada request
+- `auth-interceptor.ts` — adjunta el token de autenticación a cada request
   saliente, leyéndolo del `AuthStore`, para que ningún `*ApiService` tenga
   que agregarlo manualmente.
-- `error.interceptor.ts` — centraliza el manejo de errores HTTP (ej. redirige
+- `error-interceptor.ts` — centraliza el manejo de errores HTTP (ej. redirige
   a `/login` en un 401, normaliza el formato del error) antes de que llegue
   al consumidor de la petición (TanStack Query u otro).
-- `loading.interceptor.ts` — lleva la cuenta de peticiones en curso para
+- `loading-interceptor.ts` — lleva la cuenta de peticiones en curso para
   mostrar/ocultar un indicador de carga global, sin que cada componente
   gestione su propio spinner.
 
@@ -272,7 +278,7 @@ export const ADMIN_ROUTES: Routes = [
   },
 ];
 
-// role.guard.ts — guard funcional parametrizado
+// role-guard.ts — guard funcional parametrizado
 export const roleGuard = (role: string): CanActivateFn => () =>
   inject(AuthStore).user()?.role === role || inject(Router).createUrlTree(['/forbidden']);
 ```
@@ -337,7 +343,8 @@ export class AuthLayout {}
 
 ## 6. Modelos / interfaces
 
-- Carpeta `models/` por feature, sufijo `*.model.ts`.
+- Carpeta `models/` por feature, sufijo `-model.ts` (guion, no punto — ver
+  regla de naming en §1), ej. `session-model.ts`.
 - Los tipos pequeños de uso local quedan inline en el servicio que los usa.
 - Se promueven a `shared/models/` solo al ser reusados por 2 o más features.
 
