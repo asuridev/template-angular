@@ -332,6 +332,15 @@ export class AuthLayout {}
   `variant: input<'primary' | 'secondary'>()`), con las clases Tailwind de
   marca encapsuladas dentro del propio átomo — nunca repetidas en templates
   de features.
+- **Ante un nuevo tratamiento visual de un componente ya existente
+  (compartido o de feature), la solución es agregar una nueva variante**
+  (vía su `input()` de variante, como en el ejemplo anterior) — nunca
+  editar el template del componente para añadir clases Tailwind
+  condicionadas a un caso puntual. Esto no afecta la excepción de layout
+  del bullet siguiente: un consumidor sigue pudiendo aplicar utilidades de
+  spacing (`mt-4`, `gap-2`, etc.) sobre el host del componente; lo que se
+  prohíbe es tocar las clases internas de apariencia/marca del propio
+  componente.
 - Regla de promoción (ver §1): un componente específico de un feature se
   mueve a `shared/` solo en su segundo reuso entre features.
 - Una página por carpeta: `pages/<page-name>/<page-name>.ts`.

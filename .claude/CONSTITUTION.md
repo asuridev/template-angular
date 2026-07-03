@@ -38,20 +38,24 @@ detalle y ejemplos de código.
    (`CLAUDE.md` — Components)
 10. **Nunca `@HostBinding`/`@HostListener`** — usar el objeto `host` del
     decorador. (`CLAUDE.md` — Angular Best Practices)
+11. **Ante un nuevo tratamiento visual de un componente existente, crear una
+    variante — nunca parchear clases Tailwind ad-hoc en su template** para
+    un caso puntual. Las utilidades de layout/spacing aplicadas desde fuera
+    sobre el host siguen permitidas. (`ARCHITECTURE.md` §5)
 
 ## Inyección de dependencias
 
-11. **Siempre `inject()`** — nunca inyección por constructor.
+12. **Siempre `inject()`** — nunca inyección por constructor.
     (`CLAUDE.md` — Services)
-12. **Servicios singleton siempre `providedIn: 'root'`.**
+13. **Servicios singleton siempre `providedIn: 'root'`.**
     (`CLAUDE.md` — Services)
 
 ## Estilos y detección de cambios
 
-13. **Tailwind CSS es la única librería de estilos del proyecto** — no se
+14. **Tailwind CSS es la única librería de estilos del proyecto** — no se
     introducen otros frameworks/librerías CSS (Bootstrap, Material,
     styled-components, etc.). (`ARCHITECTURE.md` §10, `CLAUDE.md` — Styling)
-14. **Proyecto zoneless** (`provideZonelessChangeDetection()`) — nunca
+15. **Proyecto zoneless** (`provideZonelessChangeDetection()`) — nunca
     importar `zone.js`, inyectar `NgZone`, ni depender de detección de
     cambios automática fuera de signals + `OnPush`. (`ARCHITECTURE.md` §10,
     `CLAUDE.md` — Angular Best Practices)
