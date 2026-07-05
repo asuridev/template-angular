@@ -25,8 +25,8 @@ src/app/
     store/
       app.store.ts             # estado síncrono transversal sin feature dueño (tema, idioma, notificaciones globales)
   shared/                      # código cross-feature, reusado por 2+ features
-    components/
-      ui/                      # átomos: button.ts, input.ts, card.ts (variantes vía input())
+    ui/                        # átomos transversales: button.ts, input.ts, card.ts (variantes vía input())
+    components/                # componentes transversales (no atómicos), reusados por 2+ features
     models/
     pipes/
     services/
@@ -340,11 +340,14 @@ export class AuthLayout {}
 
 ## 5. Componentes / diseño atómico
 
-- `shared/components/ui/` contiene los átomos (Button, Input, Card…), cada
-  uno exponiendo variantes vía `input()` (ej.
+- `shared/ui/` contiene los átomos transversales a todos los módulos
+  (Button, Input, Card…), cada uno exponiendo variantes vía `input()` (ej.
   `variant: input<'primary' | 'secondary'>()`), con las clases Tailwind de
   marca encapsuladas dentro del propio átomo — nunca repetidas en templates
   de features.
+- `shared/components/` contiene componentes no atómicos (compuestos a
+  partir de átomos de `shared/ui/` y/u otros componentes) que son
+  transversales a todos los módulos — no ligados a un feature concreto.
 - **Ante un nuevo tratamiento visual de un componente ya existente
   (compartido o de feature), la solución es agregar una nueva variante**
   (vía su `input()` de variante, como en el ejemplo anterior) — nunca
