@@ -59,3 +59,9 @@ detalle y ejemplos de código.
     importar `zone.js`, inyectar `NgZone`, ni depender de detección de
     cambios automática fuera de signals + `OnPush`. (`ARCHITECTURE.md` §10,
     `CLAUDE.md` — Angular Best Practices)
+16. **Sin valores de estilo quemados** — colores, tipografías, radios,
+    sombras y spacing de marca se consumen desde los tokens del design system
+    definidos con `@theme` en `src/styles.css` (utilidades generadas o
+    `var(--token)`), nunca como literales/`arbitrary values`
+    (`bg-[#1a2b3c]`, `p-[13px]`, hex en `<style>`). Si falta un token, se
+    agrega al `@theme`. (`ARCHITECTURE.md` §11)

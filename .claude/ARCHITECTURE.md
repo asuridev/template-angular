@@ -433,3 +433,48 @@ proyecto.
   inyecta `NgZone`, y la UI se actualiza únicamente vía signals +
   `ChangeDetectionStrategy.OnPush` (ver `CLAUDE.md` — Angular Best
   Practices).
+
+## 11. Design system / tokens de estilo
+
+Los valores de diseño de marca (colores, tipografías, radios, sombras,
+spacing no estándar) tienen una **fuente única de verdad**: se declaran como
+tokens con la directiva `@theme` de Tailwind v4 en `src/styles.css` (que hoy
+solo contiene `@import "tailwindcss";`). No se incrustan como literales
+dispersos por la UI.
+
+```css
+@import "tailwindcss";
+
+@theme {
+  --color-brand:    oklch(0.62 0.19 255);
+  --color-surface:  oklch(0.98 0 0);
+  --spacing-gutter: 1.5rem;
+  --radius-card:    0.75rem;
+  --font-display:   "Satoshi", sans-serif;
+}
+```
+
+- **Cómo se consumen:** preferir siempre las **utilidades generadas** por cada
+  token — un token en un namespace de Tailwind produce su utilidad
+  automáticamente (`--color-brand` → `bg-brand`/`text-brand`,
+  `--spacing-gutter` → `p-gutter`/`gap-gutter`, `--radius-card` →
+  `rounded-card`, `--font-display` → `font-display`). En el bloque `<style>`
+  de host de un componente (la excepción de CSS plano ya permitida en §5/§10),
+  referenciar el token como `var(--color-brand)` — nunca el literal.
+- **Qué se prohíbe:** valores arbitrarios/quemados que dupliquen o eludan un
+  token — `bg-[#1a2b3c]`, `text-[13px]`, `rounded-[7px]`, `p-[13px]`, o hex/px
+  crudos en el CSS de host. Si falta un token para expresar un valor de marca,
+  la solución es **añadirlo al `@theme`**, no incrustar el literal.
+- **Alcance ("en la medida de lo posible"):** la escala por defecto de
+  Tailwind (`p-4`, `gap-2`, `text-sm`, breakpoints estándar, etc.) ya forma
+  parte del design system y su uso es correcto — no hay que redefinir esos
+  tokens. La regla apunta a los **valores de marca/diseño** que sí deben
+  tokenizarse. Un `arbitrary value` puntual y justificado (p. ej. una posición
+  absoluta única e irrepetible) es una excepción aceptable y documentada, no
+  una práctica.
+
+Esto se articula con §5: los átomos de `shared/ui/` encapsulan las clases de
+marca en sus variantes, y esas clases consumen los tokens del `@theme` — de
+modo que el design system fluye desde `src/styles.css` hacia toda la UI sin
+literales repetidos. Y con §10: Tailwind sigue siendo la única librería de
+estilos; `@theme` es su mecanismo nativo de tokens, no una capa adicional.
